@@ -20,8 +20,8 @@ homelab-dash is a simple web app to monitor and link to internal/external servic
 
 ## Demo
 Add new service UI:
-![Alt Text](https://s7.gifyu.com/images/dash-addnew.gif)
+![](/assets/dash-addnew.gif)
 
 Edit service UI:
-![Alt Text](https://s7.gifyu.com/images/dash-edit.gif)
+![](/assets/dash-edit.gif)
 
