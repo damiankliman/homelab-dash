@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
@@ -7,7 +8,7 @@ export function AddServer({ isEditing }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return isEditing ? (
-    <>
+    <Fragment>
       <Button
         width="390px"
         height="74px"
@@ -22,9 +23,9 @@ export function AddServer({ isEditing }) {
         <AddIcon w={6} h={6} color="lightgray" />
       </Button>
       <AddServerModal isOpen={isOpen} onClose={onClose} />
-    </>
+    </Fragment>
   ) : (
-    false
+    null
   );
 }
 
