@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { MdArrowForward } from 'react-icons/md';
 import { BiCog } from 'react-icons/bi';
 import { IconButton, useDisclosure } from '@chakra-ui/react';
@@ -12,7 +13,7 @@ function LinkEditButton({ server, isEditing }) {
   }
 
   return isEditing ? (
-    <>
+    <Fragment>
       <IconButton
         aria-label="Edit"
         icon={<BiCog />}
@@ -22,7 +23,7 @@ function LinkEditButton({ server, isEditing }) {
         onClick={onOpen}
       />
       <EditServerModal isOpen={isOpen} onClose={onClose} server={server} />
-    </>
+    </Fragment>
   ) : (
     <IconButton
       aria-label="See more"
