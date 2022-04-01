@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
-import AddServerModal from './AddServerModal';
+import AddEditServerModal from './AddEditServerModal';
 
 export function AddServer({ isEditing }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,11 +22,9 @@ export function AddServer({ isEditing }) {
       >
         <AddIcon w={6} h={6} color="lightgray" />
       </Button>
-      <AddServerModal isOpen={isOpen} onClose={onClose} />
+      <AddEditServerModal isOpen={isOpen} onClose={onClose} newServer={true} />
     </Fragment>
-  ) : (
-    null
-  );
+  ) : null;
 }
 
 export default AddServer;

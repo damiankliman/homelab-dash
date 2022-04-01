@@ -3,7 +3,7 @@ import { MdArrowForward } from 'react-icons/md';
 import { BiCog } from 'react-icons/bi';
 import { IconButton, useDisclosure } from '@chakra-ui/react';
 
-import EditServerModal from './EditServerModal';
+import AddEditServerModal from './AddEditServerModal';
 
 function LinkEditButton({ server, isEditing }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,7 +22,12 @@ function LinkEditButton({ server, isEditing }) {
         colorScheme="grey"
         onClick={onOpen}
       />
-      <EditServerModal isOpen={isOpen} onClose={onClose} server={server} />
+      <AddEditServerModal
+        isOpen={isOpen}
+        onClose={onClose}
+        server={server}
+        newServer={false}
+      />
     </Fragment>
   ) : (
     <IconButton

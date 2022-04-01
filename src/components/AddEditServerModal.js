@@ -17,9 +17,10 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Spacer,
 } from '@chakra-ui/react';
 
-function EditServerModal(props) {
+function AddEditServerModal(props) {
   const initialRef = useRef();
 
   return (
@@ -30,7 +31,9 @@ function EditServerModal(props) {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Server</ModalHeader>
+        <ModalHeader>
+          {props.newServer ? 'Add Server' : 'Edit Server'}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack spacing="10px" align="start">
@@ -38,15 +41,24 @@ function EditServerModal(props) {
             <Input
               ref={initialRef}
               placeholder="example: minecraft server"
-              value={props.server.title}
+              defaultValue={props.newServer ? '' : props.server.title}
             />
             <Text fontSize="large">Interface URL :</Text>
-            <Input placeholder="http://" value={props.server.webURL} />
+            <Input
+              placeholder="http://"
+              defaultValue={props.newServer ? '' : props.server.webURL}
+            />
             <Text fontSize="large">Ping Address :</Text>
-            <Input placeholder="192.x.x.x" value={props.server.pingAddress} />
+            <Input
+              placeholder="192.x.x.x"
+              defaultValue={props.newServer ? '' : props.server.pingAddress}
+            />
             <Text fontSize="large">Ping Port :</Text>
-            <NumberInput maxW="100px" defaultValue={props.server.pingPort}>
-              <NumberInputField />
+            <NumberInput
+              maxW="100px"
+              defaultValue={props.newServer ? '' : props.server.pingPort}
+            >
+              <NumberInputField placeholder="1234" />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />
@@ -56,9 +68,12 @@ function EditServerModal(props) {
         </ModalBody>
         <ModalFooter>
           <Flex w="100%" justify="space-between">
-            <Button colorScheme="red" onClick={props.onClose}>
-              Remove
-            </Button>
+            {props.newServer ? null : (
+              <Button colorScheme="red" onClick={props.onClose}>
+                Remove
+              </Button>
+            )}
+            <Spacer />
             <Button colorScheme="green" onClick={props.onClose}>
               Save
             </Button>
@@ -69,4 +84,4 @@ function EditServerModal(props) {
   );
 }
 
-export default EditServerModal;
+export default AddEditServerModal;
