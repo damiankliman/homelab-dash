@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import axios from 'axios';
 import {
   Modal,
   ModalOverlay,
@@ -8,20 +9,77 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Text,
   Input,
   VStack,
   Flex,
+  FormControl,
+  FormLabel,
   NumberInputField,
   NumberInput,
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
   Spacer,
+  Spinner,
 } from '@chakra-ui/react';
 
 function AddEditServerModal(props) {
   const initialRef = useRef();
+
+  const [serverData, setServerData] = useState({
+    id: props?.server?.id || '',
+    title: props?.server?.title ?? '',
+    webURL: props?.server?.webURL || '',
+    pingAddress: props?.server?.pingAddress || '',
+    pingPort: props?.server?.pingPort ?? '',
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleChange = (value, key) => {
+    const obj = { ...serverData };
+    obj[key] = value;
+    setServerData(obj);
+  };
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    setIsSaving(true);
+    console.log(serverData);
+    props.newServer
+      ? axios
+          .post(process.env.REACT_APP_API_ADDRESS + '/servers/new', serverData)
+          .then(response => {
+            console.log(response);
+            props.setServers(response.data);
+            props.onClose();
+            setIsSaving(false);
+          })
+      : axios
+          .put(process.env.REACT_APP_API_ADDRESS + '/servers/edit', serverData)
+          .then(response => {
+            console.log(response);
+            props.setServers(response.data);
+            props.onClose();
+            setIsSaving(false);
+          });
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    console.log('delete fired');
+    axios
+      .delete(process.env.REACT_APP_API_ADDRESS + '/servers/delete', {
+        data: { id: serverData.id },
+      })
+      .then(response => {
+        console.log(response);
+        props.setServers(response.data);
+        props.onClose();
+        setIsDeleting(false);
+      });
+  };
 
   return (
     <Modal
@@ -35,50 +93,68 @@ function AddEditServerModal(props) {
           {props.newServer ? 'Add Server' : 'Edit Server'}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <VStack spacing="10px" align="start">
-            <Text fontSize="large">Name :</Text>
-            <Input
-              ref={initialRef}
-              placeholder="example: minecraft server"
-              defaultValue={props.newServer ? '' : props.server.title}
-            />
-            <Text fontSize="large">Interface URL :</Text>
-            <Input
-              placeholder="http://"
-              defaultValue={props.newServer ? '' : props.server.webURL}
-            />
-            <Text fontSize="large">Ping Address :</Text>
-            <Input
-              placeholder="192.x.x.x"
-              defaultValue={props.newServer ? '' : props.server.pingAddress}
-            />
-            <Text fontSize="large">Ping Port :</Text>
-            <NumberInput
-              maxW="100px"
-              defaultValue={props.newServer ? '' : props.server.pingPort}
-            >
-              <NumberInputField placeholder="1234" />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </VStack>
-        </ModalBody>
-        <ModalFooter>
-          <Flex w="100%" justify="space-between">
-            {props.newServer ? null : (
-              <Button colorScheme="red" onClick={props.onClose}>
-                Remove
+        <form onSubmit={handleSubmit}>
+          <ModalBody>
+            <VStack spacing="10px" align="start">
+              <FormControl>
+                <FormLabel fontSize="large">Name :</FormLabel>
+                <Input
+                  ref={initialRef}
+                  placeholder="example: minecraft server"
+                  defaultValue={serverData?.title}
+                  onChange={event => handleChange(event.target.value, 'title')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize="large">Interface URL :</FormLabel>
+                <Input
+                  placeholder="http://"
+                  defaultValue={serverData?.webURL}
+                  onChange={event => handleChange(event.target.value, 'webURL')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize="large">Ping Address :</FormLabel>
+                <Input
+                  placeholder="192.x.x.x"
+                  defaultValue={serverData?.pingAddress}
+                  onChange={event =>
+                    handleChange(event.target.value, 'pingAddress')
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize="large">Ping Port :</FormLabel>
+                <NumberInput
+                  maxW="100px"
+                  defaultValue={serverData?.pingPort}
+                  onChange={(value, valueAsNumber) => {
+                    handleChange(valueAsNumber, 'pingPort');
+                  }}
+                >
+                  <NumberInputField placeholder="1234" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Flex w="100%" justify="space-between">
+              {props.newServer ? null : (
+                <Button colorScheme="red" onClick={handleDelete}>
+                  {isDeleting ? <Spinner /> : 'Remove'}
+                </Button>
+              )}
+              <Spacer />
+              <Button colorScheme="green" type="submit">
+                {isSaving ? <Spinner /> : 'Save'}
               </Button>
-            )}
-            <Spacer />
-            <Button colorScheme="green" onClick={props.onClose}>
-              Save
-            </Button>
-          </Flex>
-        </ModalFooter>
+            </Flex>
+          </ModalFooter>
+        </form>
       </ModalContent>
     </Modal>
   );
