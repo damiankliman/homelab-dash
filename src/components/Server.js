@@ -1,16 +1,9 @@
-import {
-  Text,
-  Avatar,
-  Flex,
-  Badge,
-  Spacer,
-} from '@chakra-ui/react';
+import { Text, Avatar, Flex, Badge, Spacer } from '@chakra-ui/react';
 
 import './Servers';
 import LinkEditButton from './LinkEditButton';
 
-const Server = ({ server, isEditing }) => {
-
+const Server = ({ server, isEditing, setServers }) => {
   return (
     <Flex
       width="390px"
@@ -26,7 +19,11 @@ const Server = ({ server, isEditing }) => {
       <Text fontSize="2xl">{server.title}</Text>
       <Spacer />
       <Badge colorScheme={'green'}>Available</Badge>
-      <LinkEditButton isEditing={isEditing} server={server}/>
+      <LinkEditButton
+        isEditing={isEditing}
+        server={server}
+        setServers={setServers}
+      />
     </Flex>
   );
 };

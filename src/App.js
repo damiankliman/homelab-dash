@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { BiPencil } from 'react-icons/bi';
 import {
   ChakraProvider,
@@ -18,20 +19,10 @@ function App() {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const getServers = async () => {
-      const serversFromServer = await fetchServers();
-      setServers(serversFromServer);
-    };
-
-    getServers();
+    axios.get(process.env.REACT_APP_API_ADDRESS + '/servers').then(response => {
+      setServers(response.data);
+    });
   }, []);
-
-  const fetchServers = async () => {
-    const res = await fetch(process.env.REACT_APP_API_ADDRESS);
-    const data = await res.json();
-
-    return data;
-  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -49,8 +40,12 @@ function App() {
           maxW="1230px"
           justifyContent="center"
         >
-          <Servers servers={servers} isEditing={isEditing} />
-          <AddServer isEditing={isEditing} />
+          <Servers
+            servers={servers}
+            isEditing={isEditing}
+            setServers={setServers}
+          />
+          <AddServer isEditing={isEditing} setServers={setServers} />
         </Grid>
         <IconButton
           icon={<BiPencil />}

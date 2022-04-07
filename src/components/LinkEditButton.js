@@ -5,7 +5,7 @@ import { IconButton, useDisclosure } from '@chakra-ui/react';
 
 import AddEditServerModal from './AddEditServerModal';
 
-function LinkEditButton({ server, isEditing }) {
+function LinkEditButton({ server, isEditing, setServers }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   function linkButtonClicked() {
@@ -27,6 +27,7 @@ function LinkEditButton({ server, isEditing }) {
         onClose={onClose}
         server={server}
         newServer={false}
+        setServers={setServers}
       />
     </Fragment>
   ) : (

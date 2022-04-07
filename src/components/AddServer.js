@@ -4,7 +4,7 @@ import { AddIcon } from '@chakra-ui/icons';
 
 import AddEditServerModal from './AddEditServerModal';
 
-export function AddServer({ isEditing }) {
+export function AddServer({ isEditing, setServers }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return isEditing ? (
@@ -22,7 +22,12 @@ export function AddServer({ isEditing }) {
       >
         <AddIcon w={6} h={6} color="lightgray" />
       </Button>
-      <AddEditServerModal isOpen={isOpen} onClose={onClose} newServer={true} />
+      <AddEditServerModal
+        isOpen={isOpen}
+        onClose={onClose}
+        newServer={true}
+        setServers={setServers}
+      />
     </Fragment>
   ) : null;
 }
