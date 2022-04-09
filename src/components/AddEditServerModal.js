@@ -21,21 +21,44 @@ import {
   NumberDecrementStepper,
   Spacer,
   Spinner,
+  useDisclosure,
 } from '@chakra-ui/react';
+
+import AlertBox from './AlertBox';
 
 function AddEditServerModal(props) {
   const initialRef = useRef();
 
-  const [serverData, setServerData] = useState({
+  const initialServerData = {
     id: props?.server?.id || '',
     title: props?.server?.title ?? '',
     webURL: props?.server?.webURL || '',
     pingAddress: props?.server?.pingAddress || '',
     pingPort: props?.server?.pingPort ?? '',
-  });
+  };
+
+  const [serverData, setServerData] = useState(initialServerData);
 
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('Unknown error');
+
+  const {
+    isOpen: isOpenAlert,
+    onOpen: onOpenAlert,
+    onClose: onCloseAlert,
+  } = useDisclosure();
+
+  const closeResetModal = () => {
+    props.onClose();
+    onCloseAlert();
+    setServerData(initialServerData);
+  };
+
+  const closeModal = () => {
+    props.onClose();
+    onCloseAlert();
+  };
 
   const handleChange = (value, key) => {
     const obj = { ...serverData };
@@ -46,45 +69,53 @@ function AddEditServerModal(props) {
   const handleSubmit = async event => {
     event.preventDefault();
     setIsSaving(true);
-    console.log(serverData);
     props.newServer
       ? axios
           .post(process.env.REACT_APP_API_ADDRESS + '/servers/new', serverData)
           .then(response => {
-            console.log(response);
             props.setServers(response.data);
-            props.onClose();
+            closeResetModal();
             setIsSaving(false);
+          })
+          .catch(error => {
+            setErrorMessage(error.response.data.message);
+            setIsSaving(false);
+            onOpenAlert();
           })
       : axios
           .put(process.env.REACT_APP_API_ADDRESS + '/servers/edit', serverData)
           .then(response => {
-            console.log(response);
             props.setServers(response.data);
-            props.onClose();
+            closeModal();
             setIsSaving(false);
+          })
+          .catch(error => {
+            setErrorMessage(error.response.data.message);
+            setIsSaving(false);
+            onOpenAlert();
           });
   };
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    console.log('delete fired');
     axios
       .delete(process.env.REACT_APP_API_ADDRESS + '/servers/delete', {
         data: { id: serverData.id },
       })
       .then(response => {
-        console.log(response);
         props.setServers(response.data);
-        props.onClose();
+      })
+      .catch(error => {
+        setErrorMessage(error.response.data.message);
         setIsDeleting(false);
+        onOpenAlert();
       });
   };
 
   return (
     <Modal
       isOpen={props.isOpen}
-      onClose={props.onClose}
+      onClose={closeResetModal}
       initialFocusRef={initialRef}
     >
       <ModalOverlay />
@@ -96,6 +127,13 @@ function AddEditServerModal(props) {
         <form onSubmit={handleSubmit}>
           <ModalBody>
             <VStack spacing="10px" align="start">
+              <AlertBox
+                type="error"
+                title="Error!"
+                message={errorMessage}
+                onClose={onCloseAlert}
+                isOpen={isOpenAlert}
+              />
               <FormControl>
                 <FormLabel fontSize="large">Name :</FormLabel>
                 <Input
