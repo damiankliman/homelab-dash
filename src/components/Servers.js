@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import Server from './Server';
 
-export const Servers = ({ servers, isEditing, setServers }) => {
+export const Servers = ({ servers, isEditing, setServers, serversStatus }) => {
   return (
     <Fragment>
       {servers.map(server => (
@@ -10,6 +10,7 @@ export const Servers = ({ servers, isEditing, setServers }) => {
           server={server}
           isEditing={isEditing}
           setServers={setServers}
+          serversStatus={serversStatus}
         />
       ))}
     </Fragment>
