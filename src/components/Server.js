@@ -1,9 +1,25 @@
 import { Text, Avatar, Flex, Badge, Spacer } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 
 import './Servers';
 import LinkEditButton from './LinkEditButton';
 
-const Server = ({ server, isEditing, setServers }) => {
+const Server = ({ server, isEditing, setServers, serversStatus }) => {
+  const [serverStatus, setServerStatus] = useState(false);
+
+  useEffect(() => {
+    if (
+      serversStatus.find(obj => {
+        return obj.id === server.id;
+      }) !== undefined
+    ) {
+      const statusObj = serversStatus.find(obj => {
+        return obj.id === server.id;
+      });
+      setServerStatus(statusObj.status);
+    }
+  }, [serversStatus, server.id]);
+
   return (
     <Flex
       width="390px"
@@ -18,7 +34,11 @@ const Server = ({ server, isEditing, setServers }) => {
       <Avatar name={server.title} />
       <Text fontSize="2xl">{server.title}</Text>
       <Spacer />
-      <Badge colorScheme={'green'}>Available</Badge>
+      {serverStatus ? (
+        <Badge colorScheme={'green'}>Available</Badge>
+      ) : (
+        <Badge colorScheme={'red'}>Down</Badge>
+      )}
       <LinkEditButton
         isEditing={isEditing}
         server={server}
