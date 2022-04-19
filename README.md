@@ -1,27 +1,30 @@
+
 # homelab-dash
 
 homelab-dash is a simple web app to monitor and link to internal/external services.
 
 ## Active Features
 
-- List predefined personal/external services pulled from a REST API
-- Provide links to listed services
-- Access edit UI options through editing mode button
+- Get, add, edit and delete services from the accompanying REST API [/damiankliman/homelab-dash-server](https://github.com/damiankliman/homelab-dash-server)
+- Buttons that link to the listed services web interfaces
+- Button to access an edit UI that allows you to add, edit or delete services
 - Automatically generated service avatars
+- Status badges that indicate whether a service is active or down on its defined address/port
+- Automatically updating status on a 5-second interval
+- Button to manually trigger a status update
 
 ## In Development
 
-- Back-end integration to add, edit and delete services
-- Back-end integration of automatically updating status badges
 - Custom user-uploaded service avatars
-- Adjustments to clean up the UI
-- Manual refresh button for service status
+- Ability to change the order of the services
+- User-defined status update interval
+- UI adjustments to address issues with long titles
 
 
 ## Demo
 Add new service UI:
-![](/assets/dash-addnew.gif)
+![Alt Text](https://s7.gifyu.com/images/dash-addnew.gif)
 
 Edit service UI:
-![](/assets/dash-edit.gif)
+![Alt Text](https://s7.gifyu.com/images/dash-edit.gif)
 
