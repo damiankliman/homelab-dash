@@ -2,6 +2,7 @@
   "name": "homelab-dash",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.6",
@@ -12,6 +13,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.26.1",
     "dotenv": "^16.0.0",
+    "env-cmd": "^10.1.0",
     "framer-motion": "^4.1.17",
     "is-port-reachable": "^4.0.0",
     "react": "^17.0.2",
@@ -23,6 +25,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy:here": "env-cmd -f .env.localdeploy react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
